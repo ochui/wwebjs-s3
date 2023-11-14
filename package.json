@@ -1,0 +1,25 @@
+{
+  "name": "wwebjs-s3",
+  "version": "1.0.0",
+  "description": "An S3 plugin for whatsapp-web.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ochui/wwebjs-s3.git"
+  },
+  "keywords": [
+    "wwebjs",
+    "whatsapp-web.js",
+    "AWS",
+    "S3"
+  ],
+  "author": "Princewill Ochui",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ochui/wwebjs-s3/issues"
+  },
+  "homepage": "https://github.com/ochui/wwebjs-s3#readme"
+}

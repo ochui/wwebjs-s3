@@ -1,4 +1,6 @@
 const fs = require('fs');
+const { Readable } = require('stream');
+const { HeadObjectCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 
 class S3Store {
     constructor({ s3, bucketName } = {}) {
@@ -11,10 +13,10 @@ class S3Store {
 
     async sessionExists(options) {
         try {
-            await this.s3.headObject({ Bucket: this.bucketName, Key: `${options.session}.zip` }).promise();
+            await this.s3.send(new HeadObjectCommand({ Bucket: this.bucketName, Key: `${options.session}.zip` }));
             return true;
         } catch (error) {
-            if (error.code === 'NotFound') {
+            if (error.name === 'NotFound') {
                 return false;
             }
             throw error;
@@ -27,7 +29,7 @@ class S3Store {
             Key: `${options.session}.zip`,
             Body: fs.createReadStream(`${options.session}.zip`),
         };
-        await this.s3.upload(params).promise();
+        await this.s3.send(new PutObjectCommand(params));
         await this.#deletePrevious(options);
     }
 
@@ -36,26 +38,29 @@ class S3Store {
             Bucket: this.bucketName,
             Key: `${options.session}.zip`,
         };
-        const stream = this.s3.getObject(params).createReadStream();
+        const response = await this.s3.send(new GetObjectCommand(params));
+        const stream = Readable.from(response.Body);
+
         return new Promise((resolve, reject) => {
             stream
                 .pipe(fs.createWriteStream(options.path))
                 .on('error', err => reject(err))
-                .on('close', () => resolve());
+                .on('close', () => {
+                    resolve();
+                });
         });
     }
 
     async delete(options) {
-        await this.s3.deleteObject({ Bucket: this.bucketName, Key: `${options.session}.zip` }).promise();
+        await this.s3.send(new DeleteObjectCommand({ Bucket: this.bucketName, Key: `${options.session}.zip` }));
     }
 
     async #deletePrevious(options) {
         const listParams = { Bucket: this.bucketName, Prefix: `${options.session}.zip` };
-        const response = await this.s3.listObjectsV2(listParams).promise();
-
+        const response = await this.s3.send(new ListObjectsV2Command(listParams));
         if (response.Contents.length > 1) {
             const oldSession = response.Contents.reduce((a, b) => (a.LastModified < b.LastModified ? a : b));
-            await this.s3.deleteObject({ Bucket: this.bucketName, Key: oldSession.Key }).promise();
+            await this.s3.send(new DeleteObjectCommand({ Bucket: this.bucketName, Key: oldSession.Key }));
         }
     }
 }

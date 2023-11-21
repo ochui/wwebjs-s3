@@ -7,12 +7,9 @@ Use S3 bucket to save your WhatsApp MultiDevice session on a S3 Bucket.
 
 * [Guide / Getting Started](https://wwebjs.dev/guide/authentication.html)
 
-## Pre-requisites
-
-
 ## Installation
 
-`TODO`
+`npm i wwebjs-s3` or `yarn add wwebjs-s3`
 
 
 ## Example usage

@@ -1,6 +1,6 @@
 {
-  "name": "wwebjs-s3",
-  "version": "1.0.0",
+  "name": "@ochui/wwebjs-s3",
+  "version": "1.0.1",
   "description": "An S3 plugin for whatsapp-web.js",
   "main": "index.js",
   "scripts": {

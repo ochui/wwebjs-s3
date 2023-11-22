@@ -17,7 +17,7 @@ Use S3 bucket to save your WhatsApp MultiDevice session on a S3 Bucket.
 ```js
 const { Client, RemoteAuth } = require('whatsapp-web.js');
 const { S3Client } = require("@aws-sdk/client-s3");
-const S3Store  = require('wwebjs-s3');
+const { S3Store }  = require('@ochui/wwebjs-s3');
 
 
 
@@ -28,7 +28,11 @@ const s3 = new S3Client({
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     }
 })
-const store = new S3Store({ s3: s3, bucketName: 'YOUR_BUCKET_NAME' });
+const store = new S3Store({ 
+    s3: s3, 
+    bucketName: 'YOUR_BUCKET_NAME',
+    sessionPath: 'path/to/your/session' // Optional
+});
 
 const client = new Client({
     authStrategy: new RemoteAuth({

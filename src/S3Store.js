@@ -13,7 +13,7 @@ class S3Store {
     }
 
     async sessionExists(options) {
-        let sessionDir = `session-${this.sessionPath}`
+        let sessionDir = `instance-${this.sessionPath}`
         try {
             await this.s3.send(new HeadObjectCommand({
                 Bucket: this.bucketName,
@@ -29,7 +29,7 @@ class S3Store {
     }
 
     async save(options) {
-        let sessionDir = `session-${this.sessionPath}`;
+        let sessionDir = `instance-${this.sessionPath}`;
 
         try {
             const params = {
@@ -48,7 +48,7 @@ class S3Store {
     }
 
     async extract(options) {
-        let sessionDir = `session-${this.sessionPath}`;
+        let sessionDir = `instance-${this.sessionPath}`;
 
         try {
             const params = {
@@ -76,7 +76,7 @@ class S3Store {
     }
 
     async delete(options) {
-        let sessionDir = `session-${this.sessionPath}`;
+        let sessionDir = `instance-${this.sessionPath}`;
         try {
             await this.s3.send(new DeleteObjectCommand({
                 Bucket: this.bucketName,
